@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Backoffice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Memaksa elemen yang memiliki class hidden untuk benar-benar hilang */
+        .hidden { display: none !important; }
+        /* Warna untuk menu yang sedang aktif */
+        .nav-active { background-color: #1e293b; border-left: 4px solid #10b981; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans h-screen overflow-hidden">
+
+    <div id="login-screen" class="absolute inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">
+            <div class="text-5xl mb-4">💼</div>
+            <h1 class="text-2xl font-black mb-2 text-slate-800">Admin Area</h1>
+            <p class="text-sm text-slate-500 mb-6">Silakan login untuk mengakses backoffice.</p>
+            <input type="password" id="password-input" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 mb-4 text-center text-lg outline-none focus:border-blue-500" placeholder="Password Admin">
+            <button onclick="loginAdmin()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all">MASUK DASHBOARD</button>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden w-full h-full flex flex-col md:flex-row">
+        
+        <div class="hidden md:flex flex-col w-64 bg-slate-900 text-slate-300 shrink-0 h-full z-20 shadow-xl">
+            <div class="p-6 bg-slate-950 border-b border-slate-800">
+                <h1 class="font-black text-xl text-white tracking-wider">BOS<span class="text-emerald-500">KASIR</span></h1>
+            </div>
+            <nav class="flex-1 py-4">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white transition-all nav-active">
+                    <span>📊</span> Ringkasan Cashflow
+                </button>
+                <button onclick="switchTab('produk')" id="nav-produk" class="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white transition-all">
+                    <span>📦</span> Manajemen Produk
+                </button>
+                <button onclick="switchTab('pengeluaran')" id="nav-pengeluaran" class="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white transition-all">
+                    <span>💸</span> Catat Pengeluaran
+                </button>
+            </nav>
+            <div class="p-4 border-t border-slate-800">
+                <button onclick="location.reload()" class="w-full text-left text-sm text-slate-500 hover:text-red-400">🚪 Logout</button>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+            
+            <div class="bg-white p-4 shadow-sm flex justify-between items-center md:hidden z-20">
+                <h1 class="font-black text-lg">Admin Panel</h1>
+                     <a href="index.html" class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg">BACK</a>
+
+                <select id="mobile-menu" onchange="switchTab(this.value)" class="bg-slate-100 border border-slate-200 rounded p-2 text-sm outline-none font-bold text-slate-700">
+                    <option value="dashboard">📊 Cashflow</option>
+                    <option value="produk">📦 Produk</option>
+                    <option value="pengeluaran">💸 Pengeluaran</option>
+
+                </select>
+
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 md:p-8 bg-slate-50 relative">
+                
+                <div id="loading" class="absolute top-4 right-4 bg-yellow-100 text-yellow-700 px-3 py-1 rounded text-xs font-bold hidden shadow-sm border border-yellow-200">
+                    🔄 Sedang sinkronisasi data...
+                </div>
+
+                <div id="tab-dashboard">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800">Ringkasan Cashflow Global</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-blue-500">
+                            <p class="text-sm font-bold text-slate-500 mb-1">Total Uang Masuk (Kotor)</p>
+                            <h3 id="stat-income" class="text-3xl font-black text-slate-800">Rp 0</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-red-500">
+                            <p class="text-sm font-bold text-slate-500 mb-1">Total Pengeluaran (Beban)</p>
+                            <h3 id="stat-expense" class="text-3xl font-black text-red-600">Rp 0</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-emerald-500">
+                            <p class="text-sm font-bold text-slate-500 mb-1">Laba Bersih (Net Profit)</p>
+                            <h3 id="stat-profit" class="text-3xl font-black text-emerald-600">Rp 0</h3>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="tab-produk" class="hidden">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800">Manajemen Produk</h2>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row gap-3">
+                        <input type="text" id="p-cat" placeholder="Kategori (Misal: Bakso / Minuman)" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-blue-500 bg-slate-50">
+                        <input type="text" id="p-name" placeholder="Nama Produk" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-blue-500 bg-slate-50">
+                        <input type="number" id="p-price" placeholder="Harga Jual (Angka)" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-blue-500 bg-slate-50">
+                        <button onclick="addProduct()" class="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-700 active:scale-95 shadow-md">Tambah Menu</button>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-100 text-slate-600 border-b border-slate-200">
+                                <tr>
+                                    <th class="p-4">Kategori</th>
+                                    <th class="p-4">Nama Produk</th>
+                                    <th class="p-4">Harga</th>
+                                    <th class="p-4 text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-produk" class="divide-y divide-slate-100">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tab-pengeluaran" class="hidden">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800">Catat Pengeluaran</h2>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row gap-3">
+                        <input type="text" id="e-desc" placeholder="Keterangan (Msl: Beli cup gelas 100pcs)" class="flex-[2] border rounded-lg px-3 py-2 outline-none focus:border-red-500 bg-slate-50">
+                        <input type="number" id="e-amount" placeholder="Nominal Rp (Angka)" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-red-500 bg-slate-50">
+                        <button onclick="addExpense()" class="bg-red-500 text-white font-bold px-6 py-2 rounded-lg hover:bg-red-600 active:scale-95 shadow-md">Catat Beban</button>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-100 text-slate-600 border-b border-slate-200">
+                                <tr>
+                                    <th class="p-4 w-1/4">Tanggal</th>
+                                    <th class="p-4">Keterangan</th>
+                                    <th class="p-4 text-right">Nominal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-pengeluaran" class="divide-y divide-slate-100">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ======= KONFIGURASI =======
+        const PASSWORD_BOS = "bos123"; 
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVGxE-hWeXtPUaPV-sJa0uIFI0oPgtz5ETwUalXZm3HE8t_FKboZFYZrl9xaNVlhoSwQ/exec"; // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+        // ===========================
+
+        function loginAdmin() {
+            if (document.getElementById('password-input').value === PASSWORD_BOS) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                loadDashboardData();
+            } else {
+                alert("Password Admin Salah!");
+            }
+        }
+
+        function switchTab(tabId) {
+            // Sembunyikan semua konten tab
+            document.getElementById('tab-dashboard').classList.add('hidden');
+            document.getElementById('tab-produk').classList.add('hidden');
+            document.getElementById('tab-pengeluaran').classList.add('hidden');
+            
+            // Hapus indikator aktif di tombol sidebar desktop
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('nav-active'));
+
+            // Tampilkan tab yang dipilih
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            // Beri warna aktif di tombol sidebar (Desktop)
+            if(document.getElementById('nav-' + tabId)) {
+                document.getElementById('nav-' + tabId).classList.add('nav-active');
+            }
+            
+            // Sinkronisasi dengan menu pilihan (Mobile)
+            if(document.getElementById('mobile-menu')) {
+                document.getElementById('mobile-menu').value = tabId;
+            }
+        }
+
+        function showLoading(show) {
+            const el = document.getElementById('loading');
+            if(show) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
+
+        async function loadDashboardData() {
+            showLoading(true);
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: "admin_dashboard" })
+                });
+                const data = await res.json();
+                
+                if (data.status === "success") {
+                    // Update Angka Cashflow
+                    document.getElementById('stat-income').innerText = 'Rp ' + data.pendapatan.toLocaleString('id-ID');
+                    document.getElementById('stat-expense').innerText = 'Rp ' + data.pengeluaran.toLocaleString('id-ID');
+                    document.getElementById('stat-profit').innerText = 'Rp ' + data.laba.toLocaleString('id-ID');
+
+                    // Update Tabel Produk
+                    let htmlProduk = '';
+                    data.products.forEach(p => {
+                        htmlProduk += `
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="p-4 text-slate-500">${p.kategori}</td>
+                            <td class="p-4 font-bold text-slate-800">${p.nama}</td>
+                            <td class="p-4 font-bold text-emerald-600">Rp ${p.harga.toLocaleString('id-ID')}</td>
+                            <td class="p-4 text-right">
+                                <button onclick="deleteProduct('${p.nama}')" class="text-red-500 hover:text-white hover:bg-red-500 border border-red-500 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Hapus</button>
+                            </td>
+                        </tr>`;
+                    });
+                    document.getElementById('table-produk').innerHTML = htmlProduk || `<tr><td colspan="4" class="text-center p-6 text-slate-400">Belum ada produk terdaftar</td></tr>`;
+
+                    // Update Tabel Pengeluaran
+                    let htmlPengeluaran = '';
+                    data.list_pengeluaran.forEach(e => {
+                        htmlPengeluaran += `
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="p-4 text-slate-500 text-xs font-medium">${e.tanggal}</td>
+                            <td class="p-4 text-slate-800">${e.ket}</td>
+                            <td class="p-4 text-right font-black text-red-500">Rp ${Number(e.nominal).toLocaleString('id-ID')}</td>
+                        </tr>`;
+                    });
+                    document.getElementById('table-pengeluaran').innerHTML = htmlPengeluaran || `<tr><td colspan="3" class="text-center p-6 text-slate-400">Belum ada data pengeluaran</td></tr>`;
+                }
+            } catch (err) {
+                alert("Gagal memuat data dari Google Sheets. Pastikan internet menyala dan URL sudah benar.");
+            }
+            showLoading(false);
+        }
+
+        async function addProduct() {
+            const cat = document.getElementById('p-cat').value;
+            const name = document.getElementById('p-name').value;
+            const price = document.getElementById('p-price').value;
+            
+            if(!cat || !name || !price) return alert("Isi semua kolom produk!");
+            showLoading(true);
+
+            await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "add_product", kategori: cat, nama: name, harga: parseInt(price) })
+            });
+
+            document.getElementById('p-cat').value = '';
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            loadDashboardData(); 
+        }
+
+        async function deleteProduct(namaProduk) {
+            if(!confirm(`Yakin ingin menghapus menu "${namaProduk}"? Data akan terhapus dari aplikasi kasir juga.`)) return;
+            showLoading(true);
+
+            await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "delete_product", nama_produk: namaProduk })
+            });
+            loadDashboardData();
+        }
+
+        async function addExpense() {
+            const desc = document.getElementById('e-desc').value;
+            const amount = document.getElementById('e-amount').value;
+            
+            if(!desc || !amount) return alert("Isi keterangan dan nominal pengeluaran!");
+            showLoading(true);
+
+            await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    action: "add_expense", 
+                    tanggal: new Date().toLocaleString('id-ID'),
+                    keterangan: desc, 
+                    nominal: parseInt(amount) 
+                })
+            });
+
+            document.getElementById('e-desc').value = '';
+            document.getElementById('e-amount').value = '';
+            loadDashboardData(); 
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "Kasir Bakso",
+  "short_name": "Kasir",
+  "description": "Aplikasi Kasir Stand",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3731/3731112.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

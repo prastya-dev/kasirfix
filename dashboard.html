@@ -5,97 +5,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Backoffice</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Memaksa elemen yang memiliki class hidden untuk benar-benar hilang */
+        body { font-family: 'Inter', sans-serif; }
         .hidden { display: none !important; }
+        /* Transisi halus untuk sidebar */
+        .nav-btn { transition: all 0.3s ease; }
         /* Warna untuk menu yang sedang aktif */
-        .nav-active { background-color: #1e293b; border-left: 4px solid #10b981; }
+        .nav-active { 
+            background-color: #1e293b; 
+            color: #10b981; 
+            border-right: 4px solid #10b981; 
+        }
+        /* Custom scrollbar untuk tabel & kontainer utama */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
+    
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans h-screen overflow-hidden">
+<body class="bg-slate-50 text-slate-800 h-screen overflow-hidden flex">
 
-   
+    <div class=" md:flex hidden flex-col w-64 bg-slate-900 text-slate-300 shrink-0 h-full z-20 shadow-2xl">
+        <div class="p-6 bg-slate-950 border-b border-slate-800 flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h1 class="font-black text-xl text-white tracking-wider">BOS<span class="text-emerald-500">KASIR</span></h1>
+        </div>
+        <nav class="flex-1 py-6 flex flex-col gap-1">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn nav-active w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white font-medium text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                Ringkasan Cashflow
+            </button>
+            <button onclick="switchTab('produk')" id="nav-produk" class="nav-btn w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white font-medium text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                Manajemen Produk
+            </button>
+            <button onclick="switchTab('pengeluaran')" id="nav-pengeluaran" class="nav-btn w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white font-medium text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Catat Pengeluaran
+            </button>
+        </nav>
+        <div class="p-4 border-t border-slate-800">
+            <button onclick="location.reload()" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Keluar Aplikasi
+            </button>
+        </div>
+    </div>
 
-    <div id="main-app" class="w-full h-full flex flex-col md:flex-row">
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
         
-        <div class="hidden md:flex flex-col w-64 bg-slate-900 text-slate-300 shrink-0 h-full z-20 shadow-xl">
-            <div class="p-6 bg-slate-950 border-b border-slate-800">
-                <h1 class="font-black text-xl text-white tracking-wider">BOS<span class="text-emerald-500">KASIR</span></h1>
-            </div>
-            <nav class="flex-1 py-4">
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white transition-all nav-active">
-                    <span>📊</span> Ringkasan Cashflow
-                </button>
-                <button onclick="switchTab('produk')" id="nav-produk" class="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white transition-all">
-                    <span>📦</span> Manajemen Produk
-                </button>
-                <button onclick="switchTab('pengeluaran')" id="nav-pengeluaran" class="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-white transition-all">
-                    <span>💸</span> Catat Pengeluaran
-                </button>
-            </nav>
-            <div class="p-4 border-t border-slate-800">
-                <button onclick="location.reload()" class="w-full text-left text-sm text-slate-500 hover:text-red-400">🚪 Logout</button>
-            </div>
+        <div class="bg-white p-4 shadow-sm flex justify-between items-center md:hidden z-20 border-b border-slate-200">
+
+            
+
+
+            <h1 class="font-black text-lg text-slate-800 flex items-center gap-2">
+
+                <div class="w-8 h-8 bg-emerald-500 rounded-md flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                Admin
+            </h1>
+            <select id="mobile-menu" onchange="switchTab(this.value)" class="bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm outline-none font-semibold text-slate-700">
+                <option value="dashboard">📊 Cashflow</option>
+                <option value="produk">📦 Produk</option>
+                <option value="pengeluaran">💸 Pengeluaran</option>
+            </select>
+             <button onclick="location.reload()" class=" flex items-center px-[-5]  text-sm font-medium text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </button>
         </div>
 
-        <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 relative w-full max-w-7xl mx-auto">
             
-            <div class="bg-white p-4 shadow-sm flex justify-between items-center md:hidden z-20">
-                <h1 class="font-black text-lg">Admin Panel</h1>
-                     <a href="index.html" class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg">BACK</a>
-
-                <select id="mobile-menu" onchange="switchTab(this.value)" class="bg-slate-100 border border-slate-200 rounded p-2 text-sm outline-none font-bold text-slate-700">
-                    <option value="dashboard">📊 Cashflow</option>
-                    <option value="produk">📦 Produk</option>
-                    <option value="pengeluaran">💸 Pengeluaran</option>
-
-                </select>
-
+            <div id="loading" class="fixed top-4 right-4 md:top-8 md:right-8 bg-slate-800 text-white px-4 py-3 rounded-lg text-sm font-semibold shadow-2xl border border-slate-700 hidden z-50 flex items-center gap-3">
+                <svg class="animate-spin h-5 w-5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Mensinkronkan data...
             </div>
 
-            <div class="flex-1 overflow-y-auto p-6 md:p-8 bg-slate-50 relative">
-                
-                <div id="loading" class="absolute top-4 right-4 bg-yellow-100 text-yellow-700 px-3 py-1 rounded text-xs font-bold hidden shadow-sm border border-yellow-200">
-                    🔄 Sedang sinkronisasi data...
-                </div>
-
-                <div id="tab-dashboard">
-                    <h2 class="text-2xl font-bold mb-6 text-slate-800">Ringkasan Cashflow Global</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-blue-500">
-                            <p class="text-sm font-bold text-slate-500 mb-1">Total Uang Masuk (Kotor)</p>
-                            <h3 id="stat-income" class="text-3xl font-black text-slate-800">Rp 0</h3>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-red-500">
-                            <p class="text-sm font-bold text-slate-500 mb-1">Total Pengeluaran (Beban)</p>
-                            <h3 id="stat-expense" class="text-3xl font-black text-red-600">Rp 0</h3>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-emerald-500">
-                            <p class="text-sm font-bold text-slate-500 mb-1">Laba Bersih (Net Profit)</p>
-                            <h3 id="stat-profit" class="text-3xl font-black text-emerald-600">Rp 0</h3>
-                        </div>
-
+            <div id="tab-dashboard" class="animate-fade-in">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-800">Ringkasan Cashflow</h2>
+                        <p class="text-slate-500 text-sm mt-1">Pantau pergerakan uang bisnis Anda.</p>
+                    </div>
+                    <div class="bg-slate-200/60 p-1.5 rounded-xl inline-flex w-full md:w-auto shadow-inner">
+                        <button onclick="setFilter('harian')" id="btn-filter-harian" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 transition-all">Hari Ini</button>
+                        <button onclick="setFilter('bulanan')" id="btn-filter-bulanan" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 transition-all">Bulan Ini</button>
+                        <button onclick="setFilter('all')" id="btn-filter-all" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-sm font-bold bg-white text-slate-800 shadow-sm transition-all">Semua</button>
                     </div>
                 </div>
 
-                <div id="tab-produk" class="hidden">
-                    <h2 class="text-2xl font-bold mb-6 text-slate-800">Manajemen Produk</h2>
-
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row gap-3">
-                        <input type="text" id="p-cat" placeholder="Kategori (Misal: Bakso / Minuman)" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-blue-500 bg-slate-50">
-                        <input type="text" id="p-name" placeholder="Nama Produk" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-blue-500 bg-slate-50">
-                        <input type="number" id="p-price" placeholder="Harga Jual (Angka)" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-blue-500 bg-slate-50">
-                        <button onclick="addProduct()" class="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-700 active:scale-95 shadow-md">Tambah Menu</button>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-700 p-6 rounded-2xl shadow-lg shadow-blue-500/20 text-white relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-20">
+                            <svg class="w-32 h-32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <p class="text-blue-100 font-medium mb-1 relative z-10 text-sm">Total Uang Masuk (Kotor)</p>
+                        <h3 id="stat-income" class="text-4xl font-black relative z-10 tracking-tight">Rp 0</h3>
                     </div>
+                    <div class="bg-gradient-to-br from-rose-500 to-rose-700 p-6 rounded-2xl shadow-lg shadow-rose-500/20 text-white relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-20">
+                            <svg class="w-32 h-32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+                        </div>
+                        <p class="text-rose-100 font-medium mb-1 relative z-10 text-sm">Total Pengeluaran (Beban)</p>
+                        <h3 id="stat-expense" class="text-4xl font-black relative z-10 tracking-tight">Rp 0</h3>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 p-6 rounded-2xl shadow-lg shadow-emerald-500/20 text-white relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-20">
+                            <svg class="w-32 h-32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-emerald-100 font-medium mb-1 relative z-10 text-sm">Laba Bersih (Net Profit)</p>
+                        <h3 id="stat-profit" class="text-4xl font-black relative z-10 tracking-tight">Rp 0</h3>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-100 text-slate-600 border-b border-slate-200">
+            <div id="tab-produk" class="hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-black text-slate-800">Manajemen Produk</h2>
+                    <p class="text-slate-500 text-sm mt-1">Kelola daftar menu dan harga jual ke pelanggan.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                    <h3 class="text-sm font-bold text-slate-700 mb-4 uppercase tracking-wider">Tambah Menu Baru</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-1">
+                            <input type="text" id="p-cat" placeholder="Kategori (Msl: Makanan)" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-slate-50 transition-all font-medium">
+                        </div>
+                        <div class="md:col-span-1">
+                            <input type="text" id="p-name" placeholder="Nama Produk" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-slate-50 transition-all font-medium">
+                        </div>
+                        <div class="md:col-span-1">
+                            <input type="number" id="p-price" placeholder="Harga Jual" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-slate-50 transition-all font-medium">
+                        </div>
+                        <div class="md:col-span-1">
+                            <button onclick="addProduct()" class="w-full bg-slate-900 text-white font-bold px-6 py-3 rounded-xl hover:bg-slate-800 active:scale-95 transition-all shadow-md flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                Simpan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                                 <tr>
-                                    <th class="p-4">Kategori</th>
+                                    <th class="p-4 pl-6">Kategori</th>
                                     <th class="p-4">Nama Produk</th>
-                                    <th class="p-4">Harga</th>
-                                    <th class="p-4 text-right">Aksi</th>
+                                    <th class="p-4">Harga Jual</th>
+                                    <th class="p-4 pr-6 text-right">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="table-produk" class="divide-y divide-slate-100">
@@ -103,23 +171,40 @@
                         </table>
                     </div>
                 </div>
+            </div>
 
-                <div id="tab-pengeluaran" class="hidden">
-                    <h2 class="text-2xl font-bold mb-6 text-slate-800">Catat Pengeluaran</h2>
+            <div id="tab-pengeluaran" class="hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-black text-slate-800">Catat Pengeluaran</h2>
+                    <p class="text-slate-500 text-sm mt-1">Dokumentasikan biaya operasional dan belanja bahan.</p>
+                </div>
 
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row gap-3">
-                        <input type="text" id="e-desc" placeholder="Keterangan (Msl: Beli cup gelas 100pcs)" class="flex-[2] border rounded-lg px-3 py-2 outline-none focus:border-red-500 bg-slate-50">
-                        <input type="number" id="e-amount" placeholder="Nominal Rp (Angka)" class="flex-1 border rounded-lg px-3 py-2 outline-none focus:border-red-500 bg-slate-50">
-                        <button onclick="addExpense()" class="bg-red-500 text-white font-bold px-6 py-2 rounded-lg hover:bg-red-600 active:scale-95 shadow-md">Catat Beban</button>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                    <h3 class="text-sm font-bold text-slate-700 mb-4 uppercase tracking-wider">Form Pengeluaran</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-2">
+                            <input type="text" id="e-desc" placeholder="Keterangan (Msl: Beli bahan baku)" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 bg-slate-50 transition-all font-medium">
+                        </div>
+                        <div class="md:col-span-1">
+                            <input type="number" id="e-amount" placeholder="Nominal (Rp)" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 bg-slate-50 transition-all font-medium">
+                        </div>
+                        <div class="md:col-span-1">
+                            <button onclick="addExpense()" class="w-full bg-rose-600 text-white font-bold px-6 py-3 rounded-xl hover:bg-rose-700 active:scale-95 transition-all shadow-md shadow-rose-500/30 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                Catat Beban
+                            </button>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-100 text-slate-600 border-b border-slate-200">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                                 <tr>
-                                    <th class="p-4 w-1/4">Tanggal</th>
-                                    <th class="p-4">Keterangan</th>
-                                    <th class="p-4 text-right">Nominal</th>
+                                    <th class="p-4 pl-6 w-1/4">Waktu</th>
+                                    <th class="p-4">Keterangan Pengeluaran</th>
+                                    <th class="p-4 pr-6 text-right">Total Nominal</th>
                                 </tr>
                             </thead>
                             <tbody id="table-pengeluaran" class="divide-y divide-slate-100">
@@ -127,38 +212,35 @@
                         </table>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
 
     <script>
         // ======= KONFIGURASI =======
         const PASSWORD_BOS = "bos123"; 
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVGxE-hWeXtPUaPV-sJa0uIFI0oPgtz5ETwUalXZm3HE8t_FKboZFYZrl9xaNVlhoSwQ/exec"; // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzux4ms8rD5RionZ0mgExFct4wSqQeoor2UQoHpHA5gprIbmqVAB8O0r7nyJsevvWAZw/exec"; 
+        
+        // Status Filter Cashflow Saat Ini ('harian', 'bulanan', 'all')
+        let currentFilter = 'all';
         // ===========================
 
-       
-                loadDashboardData();
-          
+        // Inisialisasi awal
+        loadDashboardData();
+
         function switchTab(tabId) {
-            // Sembunyikan semua konten tab
             document.getElementById('tab-dashboard').classList.add('hidden');
             document.getElementById('tab-produk').classList.add('hidden');
             document.getElementById('tab-pengeluaran').classList.add('hidden');
             
-            // Hapus indikator aktif di tombol sidebar desktop
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('nav-active'));
 
-            // Tampilkan tab yang dipilih
             document.getElementById('tab-' + tabId).classList.remove('hidden');
             
-            // Beri warna aktif di tombol sidebar (Desktop)
             if(document.getElementById('nav-' + tabId)) {
                 document.getElementById('nav-' + tabId).classList.add('nav-active');
             }
-            
-            // Sinkronisasi dengan menu pilihan (Mobile)
             if(document.getElementById('mobile-menu')) {
                 document.getElementById('mobile-menu').value = tabId;
             }
@@ -170,12 +252,40 @@
             else el.classList.add('hidden');
         }
 
+        // Fungsi mengatur UI filter dan me-load data kembali
+        function setFilter(filterType) {
+            currentFilter = filterType;
+            
+            // Atur gaya tombol UI Filter
+            const btnHarian = document.getElementById('btn-filter-harian');
+            const btnBulanan = document.getElementById('btn-filter-bulanan');
+            const btnAll = document.getElementById('btn-filter-all');
+            
+            [btnHarian, btnBulanan, btnAll].forEach(btn => {
+                btn.classList.remove('bg-white', 'text-slate-800', 'shadow-sm');
+                btn.classList.add('text-slate-500');
+            });
+
+            const activeBtn = document.getElementById(`btn-filter-${filterType}`);
+            activeBtn.classList.remove('text-slate-500');
+            activeBtn.classList.add('bg-white', 'text-slate-800', 'shadow-sm');
+
+            // Muat ulang data sesuai filter
+            loadDashboardData();
+        }
+
         async function loadDashboardData() {
             showLoading(true);
             try {
+                // INFO: Parameter 'filter' ditambahkan ke payload request.
+                // Google Apps Script Anda harus dikonfigurasi untuk menerima parameter 'filter' ini 
+                // untuk menghitung Laba/Rugi berdasarkan (Hari Ini / Bulan Ini / Semua Waktu).
                 const res = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: "admin_dashboard" })
+                    body: JSON.stringify({ 
+                        action: "admin_dashboard",
+                        filter: currentFilter 
+                    })
                 });
                 const data = await res.json();
                 
@@ -187,33 +297,48 @@
 
                     // Update Tabel Produk
                     let htmlProduk = '';
-                    data.products.forEach(p => {
-                        htmlProduk += `
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="p-4 text-slate-500">${p.kategori}</td>
-                            <td class="p-4 font-bold text-slate-800">${p.nama}</td>
-                            <td class="p-4 font-bold text-emerald-600">Rp ${p.harga.toLocaleString('id-ID')}</td>
-                            <td class="p-4 text-right">
-                                <button onclick="deleteProduct('${p.nama}')" class="text-red-500 hover:text-white hover:bg-red-500 border border-red-500 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Hapus</button>
-                            </td>
-                        </tr>`;
-                    });
-                    document.getElementById('table-produk').innerHTML = htmlProduk || `<tr><td colspan="4" class="text-center p-6 text-slate-400">Belum ada produk terdaftar</td></tr>`;
+                    if (data.products && data.products.length > 0) {
+                        data.products.forEach(p => {
+                            htmlProduk += `
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-4 pl-6 text-slate-500 font-medium">
+                                    <span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md text-xs border border-slate-200">${p.kategori}</span>
+                                </td>
+                                <td class="p-4 font-bold text-slate-800">${p.nama}</td>
+                                <td class="p-4 font-bold text-emerald-600">Rp ${p.harga.toLocaleString('id-ID')}</td>
+                                <td class="p-4 pr-6 text-right">
+                                    <button onclick="deleteProduct('${p.nama}')" class="text-rose-500 hover:text-white hover:bg-rose-500 bg-rose-50 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-rose-100 hover:border-rose-500">Hapus</button>
+                                </td>
+                            </tr>`;
+                        });
+                    } else {
+                        htmlProduk = `<tr><td colspan="4" class="text-center p-8 text-slate-400 font-medium">Belum ada produk terdaftar</td></tr>`;
+                    }
+                    document.getElementById('table-produk').innerHTML = htmlProduk;
 
                     // Update Tabel Pengeluaran
                     let htmlPengeluaran = '';
-                    data.list_pengeluaran.forEach(e => {
-                        htmlPengeluaran += `
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="p-4 text-slate-500 text-xs font-medium">${e.tanggal}</td>
-                            <td class="p-4 text-slate-800">${e.ket}</td>
-                            <td class="p-4 text-right font-black text-red-500">Rp ${Number(e.nominal).toLocaleString('id-ID')}</td>
-                        </tr>`;
-                    });
-                    document.getElementById('table-pengeluaran').innerHTML = htmlPengeluaran || `<tr><td colspan="3" class="text-center p-6 text-slate-400">Belum ada data pengeluaran</td></tr>`;
+                    if (data.list_pengeluaran && data.list_pengeluaran.length > 0) {
+                        data.list_pengeluaran.forEach(e => {
+                            htmlPengeluaran += `
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-4 pl-6 text-slate-500 text-sm font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        ${e.tanggal}
+                                    </div>
+                                </td>
+                                <td class="p-4 text-slate-800 font-medium">${e.ket}</td>
+                                <td class="p-4 pr-6 text-right font-black text-rose-600">Rp ${Number(e.nominal).toLocaleString('id-ID')}</td>
+                            </tr>`;
+                        });
+                    } else {
+                        htmlPengeluaran = `<tr><td colspan="3" class="text-center p-8 text-slate-400 font-medium">Belum ada data pengeluaran</td></tr>`;
+                    }
+                    document.getElementById('table-pengeluaran').innerHTML = htmlPengeluaran;
                 }
             } catch (err) {
-                alert("Gagal memuat data dari Google Sheets. Pastikan internet menyala dan URL sudah benar.");
+                alert("Gagal memuat data. Pastikan internet menyala dan URL Apps Script benar.");
             }
             showLoading(false);
         }
@@ -223,7 +348,7 @@
             const name = document.getElementById('p-name').value;
             const price = document.getElementById('p-price').value;
             
-            if(!cat || !name || !price) return alert("Isi semua kolom produk!");
+            if(!cat || !name || !price) return alert("Harap lengkapi semua kolom produk!");
             showLoading(true);
 
             await fetch(APPS_SCRIPT_URL, {
@@ -252,7 +377,7 @@
             const desc = document.getElementById('e-desc').value;
             const amount = document.getElementById('e-amount').value;
             
-            if(!desc || !amount) return alert("Isi keterangan dan nominal pengeluaran!");
+            if(!desc || !amount) return alert("Harap isi keterangan dan nominal pengeluaran!");
             showLoading(true);
 
             await fetch(APPS_SCRIPT_URL, {

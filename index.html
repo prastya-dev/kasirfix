@@ -38,14 +38,14 @@
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden">
 
-    <div id="main-app" class="flex-1 flex flex-col md:flex-row h-full relative">
+    <div id="main-app" class="flex-1 flex flex-col md:flex-row h-full overflow-hidden relative">
         
-        <div class="flex-1 flex flex-col h-full overflow-hidden bg-[#F8FAFC]">
+        <div class="flex-1 flex flex-col overflow-hidden bg-[#F8FAFC]">
             
-            <div class="bg-white px-6 py-4 shadow-sm z-10 flex justify-between items-center border-b border-slate-100">
+            <div class="bg-white px-6 py-4 shadow-sm z-10 flex justify-between items-center border-b border-slate-100 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gray-500/20 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30 text-white">
-                        <img src="logos.svg"  alt="">
+                    <div class="w-10 h-10 bg-gray-500/20 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30 text-white overflow-hidden">
+                        <img src="logos.svg" alt="" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h1 class="font-extrabold text-xl text-slate-800 tracking-tight leading-none">Bakso<span class="text-emerald-500">dirgo</span></h1>
@@ -69,7 +69,7 @@
                 </div>
             </div>
 
-            <div id="product-container" class="flex-1 overflow-y-auto p-6 pb-40 md:pb-6 relative">
+            <div id="product-container" class="flex-1 overflow-y-auto p-6 pb-6 relative">
                 <div id="loading-indicator" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center hidden">
                     <div class="loader mb-4"></div>
                     <p class="text-emerald-600 font-bold tracking-wide animate-pulse">Menyiapkan Data...</p>
@@ -78,9 +78,9 @@
             </div>
         </div>
 
-        <div class="w-full md:w-[400px] bg-white flex flex-col h-auto md:h-full fixed md:relative bottom-0 z-20 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.15)] md:shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)] rounded-t-[2rem] md:rounded-none border-l border-slate-100 transition-transform duration-300">
+        <div class="w-full md:w-[400px] bg-white flex flex-col shrink-0 z-20 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.15)] md:shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)] rounded-t-[2rem] md:rounded-none border-l border-slate-100 transition-transform duration-300">
             
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white rounded-t-[2rem] md:rounded-none">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white rounded-t-[2rem] md:rounded-none shrink-0">
                 <h2 class="font-extrabold text-lg flex items-center gap-2">
                     <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     Struk Pesanan
@@ -88,14 +88,14 @@
                 <span id="cart-badge" class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full">0 Item</span>
             </div>
             
-            <div id="cart-list" class="flex-1 overflow-y-auto p-6 max-h-[40vh] md:max-h-full bg-slate-50/50">
-                <div class="flex flex-col items-center justify-center h-full text-slate-400 opacity-60 mt-10 md:mt-0">
+            <div id="cart-list" class="flex-1 overflow-y-auto p-6 max-h-[35vh] md:max-h-full bg-slate-50/50">
+                <div class="flex flex-col items-center justify-center h-full text-slate-400 opacity-60 mt-4 md:mt-0">
                     <svg class="w-16 h-16 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <p class="text-sm font-medium">Keranjang masih kosong</p>
                 </div>
             </div>
 
-            <div class="p-6 bg-white border-t border-slate-100">
+            <div class="p-6 bg-white border-t border-slate-100 shrink-0">
                 <div class="flex justify-between items-center mb-5">
                     <span class="text-sm font-bold text-slate-400 tracking-wide">TOTAL TAGIHAN</span>
                     <span id="grand-total" class="text-3xl font-black text-slate-800 tracking-tight">Rp 0</span>
@@ -268,7 +268,7 @@
 
             if (cart.length === 0) {
                 list.innerHTML = `
-                <div class="flex flex-col items-center justify-center h-full text-slate-400 opacity-60 mt-10 md:mt-0">
+                <div class="flex flex-col items-center justify-center h-full text-slate-400 opacity-60 mt-4 md:mt-0">
                     <svg class="w-16 h-16 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <p class="text-sm font-medium">Keranjang masih kosong</p>
                 </div>`;

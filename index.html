@@ -17,17 +17,9 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
 
-    <div id="login-screen" class="absolute inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
-            <div class="text-5xl mb-4">🏪</div>
-            <h1 class="text-2xl font-black mb-6 text-slate-800">Login Kasir</h1>
-            <input type="password" id="password-input" class="w-full bg-slate-100 border-2 border-slate-200 rounded-xl px-4 py-3 mb-4 text-center text-lg outline-none focus:border-emerald-500" placeholder="Masukkan Password">
-            <button onclick="checkPassword()" class="w-full bg-emerald-500 text-white font-bold py-3 rounded-xl hover:bg-emerald-600 active:scale-95 transition-all">MASUK</button>
-            <p id="login-error" class="text-red-500 text-sm mt-3 hidden">Password salah!</p>
-        </div>
-    </div>
+ 
 
-    <div id="main-app" class="hidden flex-1 flex flex-col md:flex-row h-full">
+    <div id="main-app" class="flex-1 flex flex-col md:flex-row h-full">
         
         <div class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50">
             <div class="bg-white px-5 py-4 shadow-sm z-10 flex justify-between items-center">
@@ -96,7 +88,7 @@
 
     <script>
         // ======= KONFIGURASI =======
-        const PASSWORD_APP = "admin123"; 
+       
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVGxE-hWeXtPUaPV-sJa0uIFI0oPgtz5ETwUalXZm3HE8t_FKboZFYZrl9xaNVlhoSwQ/exec"; // Wajib diisi!
         // ===========================
 
@@ -105,16 +97,9 @@
         let dbHistory = [];
 
         // Fitur Login
-        function checkPassword() {
-            if (document.getElementById('password-input').value === PASSWORD_APP) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('main-app').classList.add('flex');
+      
                 syncData(); // Langsung load data saat login
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
+          
 
         // Generate ID Transaksi Unik
         function generateTrxId() {

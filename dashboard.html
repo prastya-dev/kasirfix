@@ -14,17 +14,9 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans h-screen overflow-hidden">
 
-    <div id="login-screen" class="absolute inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">
-            <div class="text-5xl mb-4">💼</div>
-            <h1 class="text-2xl font-black mb-2 text-slate-800">Admin Area</h1>
-            <p class="text-sm text-slate-500 mb-6">Silakan login untuk mengakses backoffice.</p>
-            <input type="password" id="password-input" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 mb-4 text-center text-lg outline-none focus:border-blue-500" placeholder="Password Admin">
-            <button onclick="loginAdmin()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 active:scale-95 transition-all">MASUK DASHBOARD</button>
-        </div>
-    </div>
+   
 
-    <div id="main-app" class="hidden w-full h-full flex flex-col md:flex-row">
+    <div id="main-app" class="w-full h-full flex flex-col md:flex-row">
         
         <div class="hidden md:flex flex-col w-64 bg-slate-900 text-slate-300 shrink-0 h-full z-20 shadow-xl">
             <div class="p-6 bg-slate-950 border-b border-slate-800">
@@ -146,16 +138,9 @@
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVGxE-hWeXtPUaPV-sJa0uIFI0oPgtz5ETwUalXZm3HE8t_FKboZFYZrl9xaNVlhoSwQ/exec"; // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
         // ===========================
 
-        function loginAdmin() {
-            if (document.getElementById('password-input').value === PASSWORD_BOS) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
+       
                 loadDashboardData();
-            } else {
-                alert("Password Admin Salah!");
-            }
-        }
-
+          
         function switchTab(tabId) {
             // Sembunyikan semua konten tab
             document.getElementById('tab-dashboard').classList.add('hidden');
